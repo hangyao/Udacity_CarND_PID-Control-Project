@@ -2,6 +2,21 @@
 Self-Driving Car Engineer Nanodegree Program
 
 ---
+### Describe the effect each of the P, I, D components had in your implementation
+
+A PID (Proportional, Integral, Derivative) controller is a control loop feedback controller which is widely used in different control systems.
+
+- P (Proportional): The proportional term of the PID controller attempts to account for the cross track error by turning the vehicle toward the desired path by an amount proportional to the cross track. This very quickly steers the vehicle toward the path, but when the vehicle approaches the desired path and the cross track error is small, the vehicle begin to drive straight even though the vehicle is not following the desired path. This process will result in an oscillation when attempting to drive in a straight line and will most likely cause the vehicle to drive off the road while attempting to navigate a corner.
+
+- I (Integral): The integral term of the PID controller attempts to minimize "accumulated" cross track error. If the vehicle has spent time driving on one side of the desired path, this term of the controller will attempt to drive the vehicle on the other side of the desired path in order to negate the accumulated error. This could also result in an oscillation if it is the only term used in the controller. The Integral term can also be used to counter the effect of a steering bias that would cause the vehicle to follow the desired path, but offset from the path by some amount.
+
+- D (Derivative): The derivative term of the PID controller helps address changes in the cross track error. This term is proportional to the change in cross track error meaning that if the cross track error is increasing, it will steer the vehicle toward the desired path. If the cross track error is decreasing, it will steer the vehicle away from the desired path. This counter steering helps steer the vehicle onto the desired path when the vehicle is approaching it from one side or the other. This term helps address the oscillations that can be introduced by the proportional and integral terms allowing the vehicle to drive more consistently along the desired path.
+
+### Describe how the final hyperparameters were chosen
+
+The hyperparameters were tuned manually by generally following the rule of thumb of the [Ziegler-Nichols method](https://en.wikipedia.org/wiki/Ziegler%E2%80%93Nichols_method). This method is to tune P (proportional) value first, then add I (integral) value and D (derivative) value independently, and finally put them together with a heuristic proportion. However, since the relationship among these three values is a dynamic system, and the simulator contains only a complex track with many turns, it was not easy to find a perfect combination of these values. The final PID values are (0.1, 0.0001, 2.0). I believe there might be better values but this is the best performed hyperparameters so far.
+
+---
 
 ## Dependencies
 
@@ -19,7 +34,7 @@ Self-Driving Car Engineer Nanodegree Program
   * Run either `./install-mac.sh` or `./install-ubuntu.sh`.
   * If you install from source, checkout to commit `e94b6e1`, i.e.
     ```
-    git clone https://github.com/uWebSockets/uWebSockets 
+    git clone https://github.com/uWebSockets/uWebSockets
     cd uWebSockets
     git checkout e94b6e1
     ```
@@ -33,7 +48,7 @@ There's an experimental patch for windows in this [PR](https://github.com/udacit
 1. Clone this repo.
 2. Make a build directory: `mkdir build && cd build`
 3. Compile: `cmake .. && make`
-4. Run it: `./pid`. 
+4. Run it: `./pid`.
 
 ## Editor Settings
 
